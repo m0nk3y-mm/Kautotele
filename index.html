@@ -63,7 +63,7 @@
 <body class="min-h-screen flex flex-col pb-24 selection:bg-rose-600 selection:text-white">
 
   <!-- ==================== 1. TOP TELEGRAM STATUS BAR ==================== -->
-  <div class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800">
+ <div class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
       <div class="flex items-center gap-2 min-w-0">
         <span id="tgStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 shrink-0">
@@ -74,12 +74,12 @@
           Admin: @pyaephyo_monkey
         </span>
       </div>
-
-      <!-- <button
-         onclick="openTgConfigModal()"
+<!-- 
+      <button
+        onclick="openTgConfigModal()"
         class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition border border-slate-700 shrink-0"
-      > -->
-        <i class="fa-solid fa-gear text-sky-400"> </i>
+      >
+        <i class="fa-solid fa-gear text-sky-400"></i> -->
         <span></span>
       </button>
     </div>
@@ -704,7 +704,7 @@
       sortBy: 'popular',
       cart: JSON.parse(localStorage.getItem('TG_AP_CART') || '[]'),
       // Telegram Admin Configuration
-      adminUsername: localStorage.getItem('TG_ADMIN_USERNAME') || 'pyaephyo_monkey',
+      adminUsername: localStorage.getItem('TG_ADMIN_USERNAME') || 'AutoPartsMM_Admin',
       botToken: localStorage.getItem('TG_BOT_TOKEN') || '',
       chatId: localStorage.getItem('TG_CHAT_ID') || '',
       telegramUser: null
@@ -1341,15 +1341,12 @@
      * 8. TELEGRAM ADMIN SETTINGS MODAL
      ********************************************************************/
     function openTgConfigModal() {
-      // document.getElementById('cfgAdminUsername').value = state.adminUsername.replace(/^@/, '');
-      // document.getElementById('cfgBotToken').value = state.botToken;
-      // document.getElementById('cfgChatId').value = state.chatId;
-      // const modal = document.getElementById('tgConfigModal');
-      // modal.classList.remove('hidden');
-      // modal.classList.add('flex');
-      adminUsername: "pyaephyo_monkey", // @ မပါဘဲ ထည့်ပါ
-      botToken: "9137561204:AAGDu_Ejlv6HLaRGUe-TLfj6NBtGK4RR5jk", // BotFather ကရတဲ့ Token ကို ဒီမှာ တန်းထည့်ပါ
-      chatId: "5800034024" // @userinfobot ကရတဲ့ သင့် Chat ID ကို ဒီမှာ တန်းထည့်ပါ
+      document.getElementById('cfgAdminUsername').value = state.adminUsername.replace(/^@/, '');
+      document.getElementById('cfgBotToken').value = state.botToken;
+      document.getElementById('cfgChatId').value = state.chatId;
+      const modal = document.getElementById('tgConfigModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
     function closeTgConfigModal() {
