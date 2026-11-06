@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="my" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>K Auto Part | ကားအပိုပစ္စည်း အရောင်းစင်တာ</title>
+  <!-- Telegram Mini App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Google Fonts: Inter + Padauk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Padauk', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#0f172a',
+              slate: '#1e293b',
+              red: '#e11d48',
+              redHover: '#be123c',
+              tg: '#24A1DE',
+              tgDark: '#1d8abf'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', 'Padauk', sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up {
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col pb-24 selection:bg-rose-600 selection:text-white">
+
+  <!-- ==================== 1. TOP TELEGRAM STATUS BAR ==================== -->
+  <div class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span id="tgStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 shrink-0">
+          <i class="fa-brands fa-telegram text-sky-400"></i>
+          <span id="tgStatusText">Telegram Direct Order Ready</span>
+        </span>
+        <span id="tgAdminDisplay" class="text-[11px] text-slate-400 truncate hidden sm:inline">
+          Admin: @pyaephyo_monkey
+        </span>
+      </div>
+
+      <button
+        onclick="openTgConfigModal()"
+        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition border border-slate-700 shrink-0"
+      >
+        <i class="fa-solid fa-gear text-sky-400"></i>
+        <span>Telegram ချိတ်ဆက်မှု ပြင်ရန်</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== 2. STICKY STORE HEADER ==================== -->
+  <header class="sticky top-0 z-30 bg-brand-dark text-white shadow-lg border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3 space-y-2.5">
+      <div class="flex items-center justify-between gap-3">
+        <!-- Brand Identity -->
+        <a href="#" onclick="resetAllFilters(); return false;" class="flex items-center gap-2.5 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-600 to-red-700 flex items-center justify-center shadow-md shadow-rose-600/30 group-hover:scale-105 transition">
+            <i class="fa-solid fa-car-burst text-lg text-white"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">AUTOPARTS</span>
+              <span class="bg-sky-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded flex items-center gap-1">
+                <i class="fa-brands fa-telegram"></i> SHOP
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-none">ကားအပိုပစ္စည်းနှင့် ဆက်စပ်ပစ္စည်း တိုက်ရိုက်မှာယူရေး</p>
+          </div>
+        </a>
+
+        <!-- Right Quick Actions -->
+        <div class="flex items-center gap-2">
+          <!-- Direct Contact Admin on Telegram -->
+          <button
+            onclick="contactAdminDirect()"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 transition"
+            title="Admin ဆီ တိုက်ရိုက်မေးမြန်းရန်"
+          >
+            <i class="fa-brands fa-telegram text-base"></i>
+            <span class="hidden sm:inline">Admin ဆီမေးရန်</span>
+          </button>
+
+          <!-- Cart Trigger Button -->
+          <button
+            onclick="openCheckoutDrawer()"
+            class="relative inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition"
+          >
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="hidden sm:inline">ခြင်းတောင်း</span>
+            <span id="headerCartBadge" class="px-1.5 py-0.5 text-[11px] rounded-full bg-white text-rose-700 font-extrabold leading-none">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Input Bar -->
+      <div class="relative w-full">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          id="searchInput"
+          type="text"
+          oninput="handleSearch(this.value)"
+          placeholder="ပစ္စည်းအမည်၊ ကုတ်နံပါတ် သို့မဟုတ် ကားမော်ဒယ် ရှာရန် (ဥပမာ - Crown, Fit, 360, Brake)..."
+          class="w-full pl-10 pr-9 py-2.5 rounded-xl bg-slate-800/95 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-rose-500 transition"
+        />
+        <button id="clearSearchBtn" onclick="handleSearch('')" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Scrollable Bar -->
+    <div class="bg-slate-900/95 border-t border-slate-800/80">
+      <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="categoryBar">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 3. MAIN STOREFRONT CONTENT ==================== -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-5">
+
+    <!-- Compact Telegram Shop Banner -->
+    <section class="relative rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-rose-950 text-white p-4 sm:p-6 shadow-md border border-slate-800 overflow-hidden">
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5 max-w-xl">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-[11px] font-bold">
+            <i class="fa-brands fa-telegram"></i>
+            <span>အကောင့်ဖွင့်စရာမလိုဘဲ Telegram မှ တိုက်ရိုက်မှာယူနိုင်သည်</span>
+          </div>
+          <h1 class="text-lg sm:text-2xl font-extrabold leading-snug">
+            ကားအပိုပစ္စည်းများကို ရွေးချယ်ပြီး <span class="text-rose-400">Admin Telegram ဆီသို့</span> တစ်ချက်နှိပ်ရုံဖြင့် အော်ဒါပို့ပါ
+          </h1>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            မိမိလိုအပ်သော ပစ္စည်းများကို ခြင်းတောင်းထဲထည့်ပြီး အမည်၊ ဖုန်းနံပါတ်နှင့် လိပ်စာဖြည့်လိုက်သည်နှင့် Admin ဆီသို့ အော်ဒါစာရင်း တန်းဝင်သွားမည်ဖြစ်ပါသည်။
+          </p>
+        </div>
+
+        <!-- Car Model Quick Filter Box -->
+        <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-3 shrink-0 md:w-72">
+          <div class="text-[11px] font-bold text-slate-300 mb-2 flex items-center justify-between">
+            <span><i class="fa-solid fa-car text-rose-500 mr-1"></i> ကားမော်ဒယ်အလိုက် ရွေးရန်</span>
+            <button onclick="selectCarModel('All')" class="text-sky-400 hover:underline">အားလုံးပြ</button>
+          </div>
+          <div id="carModelPills" class="flex flex-wrap gap-1.5">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Status & Sort Row -->
+    <section class="flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-3 rounded-2xl border border-slate-200/80 shadow-xs">
+      <div class="flex items-center gap-2">
+        <span class="text-sm font-extrabold text-slate-900">ပစ္စည်းစာရင်း</span>
+        <span id="productCountBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">0 မျိုး</span>
+        <span id="activeFilterText" class="text-xs text-slate-500 hidden sm:inline"></span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label for="sortSelect" class="text-xs font-semibold text-slate-500">စီစဉ်ပုံ -</label>
+        <select
+          id="sortSelect"
+          onchange="handleSort(this.value)"
+          class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-slate-800 focus:outline-none focus:border-rose-600"
+        >
+          <option value="popular">လူကြိုက်များသော ပစ္စည်းများ</option>
+          <option value="price-asc">ဈေးနှုန်း (အနည်း မှ အများ)</option>
+          <option value="price-desc">ဈေးနှုန်း (အများ မှ အနည်း)</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Product Grid -->
+    <section id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <!-- Populated by JS -->
+    </section>
+
+  </main>
+
+  <!-- ==================== 4. TELEGRAM MINI-APP STICKY BOTTOM CHECKOUT BAR ==================== -->
+  <div id="stickyBottomCartBar" class="fixed bottom-0 left-0 right-0 z-30 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 text-white px-3 sm:px-6 py-3 shadow-2xl transition-transform duration-300 translate-y-full">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="openCheckoutDrawer()">
+        <div class="relative w-11 h-11 rounded-2xl bg-rose-600 flex items-center justify-center text-white shadow-md shadow-rose-600/30">
+          <i class="fa-solid fa-cart-shopping text-lg"></i>
+          <span id="bottomCartQty" class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-white text-rose-700 text-xs font-extrabold flex items-center justify-center shadow">0</span>
+        </div>
+        <div>
+          <p class="text-[11px] text-slate-400 leading-none">ရွေးချယ်ထားသော စုစုပေါင်းတန်ဖိုး</p>
+          <p id="bottomCartTotal" class="text-base sm:text-lg font-extrabold text-white mt-0.5">0 MMK</p>
+        </div>
+      </div>
+
+      <button
+        onclick="openCheckoutDrawer()"
+        class="px-5 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-sky-500/25 flex items-center gap-2 transition active:scale-95"
+      >
+        <i class="fa-brands fa-telegram text-base"></i>
+        <span>အော်ဒါတင်ရန် (Checkout)</span>
+        <i class="fa-solid fa-arrow-right text-xs"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== 5. CHECKOUT & DIRECT TELEGRAM ORDER DRAWER ==================== -->
+  <div id="checkoutBackdrop" class="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-xs hidden" onclick="closeCheckoutDrawer()"></div>
+  <aside id="checkoutDrawer" class="fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto z-50 w-full sm:max-w-lg max-h-[92vh] sm:max-h-screen bg-white rounded-t-3xl sm:rounded-none shadow-2xl flex flex-col hidden animate-slide-up">
+    
+    <!-- Drawer Header -->
+    <div class="px-5 py-4 bg-slate-900 text-white rounded-t-3xl sm:rounded-none flex items-center justify-between border-b border-slate-800 shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-400">
+          <i class="fa-brands fa-telegram text-xl"></i>
+        </div>
+        <div>
+          <h2 class="font-extrabold text-sm sm:text-base">Telegram Direct Order မှာယူမှု</h2>
+          <p class="text-[11px] text-slate-400">အော်ဒါတင်လိုက်သည်နှင့် Admin ဆီသို့ စာတန်းဝင်ပါမည်</p>
+        </div>
+      </div>
+      <button onclick="closeCheckoutDrawer()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Scrollable Drawer Body -->
+    <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5">
+      
+      <!-- Selected Cart Items -->
+      <div class="space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+            ၁။ ရွေးချယ်ထားသော ပစ္စည်းများ (<span id="drawerItemCount">0</span>)
+          </h3>
+          <button onclick="clearCart()" class="text-xs text-rose-600 hover:underline font-semibold">
+            အားလုံးဖျက်မည်
+          </button>
+        </div>
+        <div id="drawerCartItems" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+          <!-- Populated by JS -->
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900 text-white flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-300">စုစုပေါင်း ကျသင့်ငွေ (Total)</span>
+          <span id="drawerTotalAmount" class="text-base sm:text-lg font-extrabold text-rose-400">0 MMK</span>
+        </div>
+      </div>
+
+      <!-- Buyer Information Form (No Account Needed) -->
+      <div class="space-y-3 pt-2 border-t border-slate-200">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+            ၂။ ပို့ဆောင်ရမည့် လိပ်စာနှင့် ဖုန်းနံပါတ်
+          </h3>
+          <span id="tgUserDetectedTag" class="hidden text-[11px] font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
+            <i class="fa-brands fa-telegram mr-1"></i>Telegram User ချိတ်ဆက်ပြီး
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ဝယ်ယူသူ အမည် *</label>
+            <input
+              id="buyerName"
+              type="text"
+              oninput="updateLiveTelegramPreview()"
+              placeholder="ဥပမာ - ကိုအောင်မင်း"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ဆက်သွယ်ရန် ဖုန်းနံပါတ် *</label>
+            <input
+              id="buyerPhone"
+              type="tel"
+              oninput="updateLiveTelegramPreview()"
+              placeholder="09-xxxxxxxxx"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">မြို့နယ် / ပို့ဆောင်မှုပုံစံ *</label>
+            <select
+              id="buyerCity"
+              onchange="updateLiveTelegramPreview()"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:border-sky-500"
+            >
+              <option value="မန္တလေးမြို့တွင်း အိမ်အရောက်ပို့">မန္တလေးမြို့တွင်း အိမ်အရောက်ပို့</option>
+              <option value="ရန်ကုန်မြို့တွင်း အိမ်အရောက်ပို့">ရန်ကုန်မြို့တွင်း အိမ်အရောက်ပို့</option>
+              <option value="နယ်မြို့ အဝေးပြေးကားဂိတ်တင်">နယ်မြို့ အဝေးပြေးကားဂိတ်တင်</option>
+              <option value="Royal Express / အမြန်ချောပို့">Royal Express / အမြန်ချောပို့</option>
+              <option value="ဆိုင်တွင် လာရောက်ယူမည်">ဆိုင်တွင် လာရောက်ယူမည်</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ငွေပေးချေမှု စနစ် *</label>
+            <select
+              id="buyerPayment"
+              onchange="updateLiveTelegramPreview()"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:border-sky-500"
+            >
+              <option value="KBZPay (KPay)">KBZPay (KPay)</option>
+              <option value="WavePay">WavePay</option>
+              <option value="AYA Pay / CB Pay">AYA Pay / CB Pay</option>
+              <option value="ပစ္စည်းရောက်မှ ငွေချေမည် (COD)">ပစ္စည်းရောက်မှ ငွေချေမည် (COD)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">အသေးစိတ် လိပ်စာ (သို့) ကားဂိတ်အမည် *</label>
+          <input
+            id="buyerAddress"
+            type="text"
+            oninput="updateLiveTelegramPreview()"
+            placeholder="လမ်း၊ ရပ်ကွက်၊ မြို့နယ် (သို့မဟုတ်) တင်ပေးရမည့် ကားဂိတ်အမည်"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">မှတ်ချက် / မိမိကားမော်ဒယ်နှင့် ခုနှစ် (Optional)</label>
+          <input
+            id="buyerNote"
+            type="text"
+            oninput="updateLiveTelegramPreview()"
+            placeholder="ဥပမာ - Toyota Crown 2005 3.0 အတွက် သုံးမှာပါ"
+            class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
+          />
+        </div>
+      </div>
+
+      <!-- Live Preview of Admin Telegram Message -->
+      <div class="space-y-1.5 pt-2 border-t border-slate-200">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-bold text-slate-500 uppercase">
+            <i class="fa-brands fa-telegram text-sky-500 mr-1"></i>Admin ဆီသို့ တန်းဝင်မည့် အော်ဒါစာသား နမူနာ
+          </span>
+          <button onclick="copyOrderText()" class="text-[11px] font-bold text-sky-600 hover:underline">
+            <i class="fa-regular fa-copy mr-1"></i>Copy ကူးရန်
+          </button>
+        </div>
+        <pre id="liveTelegramPreview" class="p-3 rounded-xl bg-slate-900 text-emerald-300 text-[11px] font-mono whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto border border-slate-800"></pre>
+      </div>
+
+    </div>
+
+    <!-- Drawer Action Buttons -->
+    <div class="p-4 bg-slate-50 border-t border-slate-200 space-y-2 shrink-0">
+      <!-- Primary: Direct Telegram App Chat to Admin -->
+      <button
+        id="sendDirectTgChatBtn"
+        onclick="sendOrderViaTelegramChat()"
+        class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-sky-500/25 flex items-center justify-center gap-2 transition active:scale-98"
+      >
+        <i class="fa-brands fa-telegram text-lg"></i>
+        <span>Admin Telegram ဆီ တိုက်ရိုက်စာပို့ မှာယူမည်</span>
+      </button>
+
+      <!-- Secondary: Silent Instant Bot API Send -->
+      <button
+        id="sendBotApiBtn"
+        onclick="sendOrderViaBotApi()"
+        class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+      >
+        <i class="fa-solid fa-bolt text-amber-400"></i>
+        <span>Website မှ တိုက်ရိုက် အော်ဒါတန်းပို့မည် (Bot API / Instant)</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==================== 6. PRODUCT DETAILS MODAL ==================== -->
+  <div id="productDetailModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs hidden items-center justify-center p-4" onclick="closeProductDetailModal()">
+    <div id="productDetailCard" class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200" onclick="event.stopPropagation()">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- ==================== 7. TELEGRAM ADMIN / BOT CONFIG MODAL ==================== -->
+  <div id="tgConfigModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200">
+      <div class="bg-slate-900 text-white px-5 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-brands fa-telegram text-sky-400 text-xl"></i>
+          <div>
+            <h3 class="font-bold text-sm sm:text-base">Telegram Admin အော်ဒါလက်ခံမှု သတ်မှတ်ရန်</h3>
+            <p class="text-[11px] text-slate-400">Customer မှာယူသမျှ စာတန်းဝင်မည့် Admin အကောင့်နှင့် Bot စနစ်</p>
+          </div>
+        </div>
+        <button onclick="closeTgConfigModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs sm:text-sm">
+        <!-- Method 1: Admin Username -->
+        <div class="p-3.5 rounded-xl bg-sky-50 border border-sky-200 space-y-2">
+          <div class="font-bold text-slate-900 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-sky-600 text-white text-xs flex items-center justify-center font-bold">1</span>
+            <span>နည်းလမ်း (၁) - Admin Telegram Username (အလွယ်ကူဆုံး)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            သင်၏ Telegram Username ကို ထည့်ထားပါက Customer က အော်ဒါတင်လိုက်သည်နှင့် အော်ဒါစာရင်းအပြည့်အစုံ ရေးပြီးသားဖြင့် သင့် Chat Box သို့ တိုက်ရိုက်ရောက်လာပါမည်။
+          </p>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Admin Telegram Username (`@` မပါဘဲ ထည့်ပါ)</label>
+            <div class="flex items-center">
+              <span class="px-3 py-2 bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl font-bold text-slate-600">@</span>
+              <input
+                id="cfgAdminUsername"
+                type="text"
+                placeholder="AutoPartsMM_Admin"
+                class="w-full px-3 py-2 rounded-r-xl border border-slate-300 text-xs sm:text-sm font-mono focus:outline-none focus:border-sky-600"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Method 2: Telegram Bot Token + Chat ID -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+          <div class="font-bold text-slate-900 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center font-bold">2</span>
+            <span>နည်းလမ်း (၂) - Telegram Bot API (Website မှ အလိုအလျောက် စာတန်းပို့ရန်)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <code>@BotFather</code> မှ ရသော Bot Token နှင့် သင်၏ Chat ID (သို့) Order Group ID ထည့်ထားပါက Customer ခလုတ်နှိပ်လိုက်သည်နှင့် သင့် Telegram ဆီသို့ Bot က အလိုအလျောက် စာလှမ်းပို့ပေးပါမည်။
+          </p>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Telegram Bot Token (Optional)</label>
+            <input
+              id="cfgBotToken"
+              type="text"
+              placeholder="1234567890:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:outline-none focus:border-sky-600"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Admin / Group Chat ID (Optional)</label>
+            <input
+              id="cfgChatId"
+              type="text"
+              placeholder="ဥပမာ - 987654321 သို့မဟုတ် -100123456789"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:outline-none focus:border-sky-600"
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button onclick="closeTgConfigModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">
+            ပိတ်မည်
+          </button>
+          <button onclick="saveTgConfig()" class="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs sm:text-sm shadow-md">
+            သိမ်းဆည်းမည် (Save Telegram Config)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 8. ORDER SENT RECEIPT MODAL ==================== -->
+  <div id="orderReceiptModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200">
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 text-center space-y-2">
+        <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center mx-auto text-3xl">
+          <i class="fa-solid fa-check-double"></i>
+        </div>
+        <h3 class="font-extrabold text-lg">အော်ဒါဘောက်ချာ အသင့်ဖြစ်ပါပြီ!</h3>
+        <p id="receiptModalSubtitle" class="text-xs text-emerald-100">Admin ၏ Telegram ဆီသို့ အောက်ပါအော်ဒါစာရင်း ပေးပို့ပြီးပါပြီ။</p>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <pre id="receiptModalText" class="p-3.5 rounded-2xl bg-slate-900 text-emerald-300 text-xs font-mono whitespace-pre-wrap max-h-60 overflow-y-auto"></pre>
+
+        <div class="grid grid-cols-1 gap-2">
+          <a
+            id="receiptOpenTelegramLink"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md"
+          >
+            <i class="fa-brands fa-telegram text-lg"></i>
+            <span>Admin Telegram Chat ကို တိုက်ရိုက်ဖွင့်ရန်</span>
+          </a>
+          <button
+            onclick="closeOrderReceiptModal()"
+            class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
+          >
+            ဆိုင်သို့ ပြန်သွားမည်
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 9. TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toastContainer" class="fixed top-16 right-4 z-50 flex flex-col gap-2 max-w-xs w-full pointer-events-none"></div>
+
+  <!-- ==================== 10. APPLICATION LOGIC ==================== -->
+  <script>
+    /********************************************************************
+     * 1. CATALOG DATA (12 Realistic Auto Parts & Accessories in MMK)
+     ********************************************************************/
+    const CATEGORIES = [
+      { id: 'All', label: 'အားလုံး', icon: 'fa-border-all' },
+      { id: 'Engine', label: 'အင်ဂျင်ပိုင်း', icon: 'fa-gears' },
+      { id: 'Brakes', label: 'ဘရိတ်စနစ်', icon: 'fa-compact-disc' },
+      { id: 'Suspension', label: 'အောက်ပိုင်း/ရှော့ဘား', icon: 'fa-screwdriver-wrench' },
+      { id: 'Lighting', label: 'မီးသီး/LED', icon: 'fa-lightbulb' },
+      { id: 'Oils', label: 'အင်ဂျင်ဝိုင်/ဆီ', icon: 'fa-oil-can' },
+      { id: 'Accessories', label: 'ကားအလှဆင်/Dashcam', icon: 'fa-video' }
+    ];
+
+    const CAR_MODELS = [
+      'All',
+      'Toyota Crown',
+      'Mark II',
+      'Honda Fit',
+      'Alphard',
+      'Hilux',
+      'Universal'
+    ];
+
+    const PRODUCTS = [
+      {
+        id: 'AP-101',
+        name: 'Denso Iridium TT Spark Plug (4pcs Set)',
+        category: 'Engine',
+        models: 'Toyota Crown, Mark II, Belta, Vitz, Alphard',
+        price: 85000,
+        stock: 'In Stock',
+        badge: 'Hot Seller',
+        image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=700&q=80',
+        desc: 'Made in Japan Denso Iridium ပလပ်အစစ် (၄ လုံးတွဲ)။ ဆီစားသက်သာပြီး အင်ဂျင်ဆွဲအားနှင့် မီးပွင့်အား အထူးကောင်းမွန်စေသည်။'
+      },
+      {
+        id: 'AP-102',
+        name: '4K 360° Surround View 4-Channel Car Dashcam',
+        category: 'Accessories',
+        models: 'Universal (ကားမျိုးစုံ တပ်ဆင်နိုင်သည်)',
+        price: 345000,
+        stock: 'In Stock',
+        badge: '360° 4-Cam',
+        image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=700&q=80',
+        desc: 'ရှေ့၊ နောက်၊ ဘယ်၊ ညာ ကင်မရာ ၄ လုံးပါဝင်သော 4K HD 360° Dashcam။ Night Vision နှင့် 24 နာရီ Parking Monitoring ပါဝင်သည်။'
+      },
+      {
+        id: 'AP-103',
+        name: 'Brembo Ceramic Front Brake Pads (ရှေ့ဘရိတ်ရှူး)',
+        category: 'Brakes',
+        models: 'Honda Fit, Insight, Civic, Grace',
+        price: 120000,
+        stock: 'In Stock',
+        badge: 'OEM Grade',
+        image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=700&q=80',
+        desc: 'ဖုန်ထွက်နည်းပြီး ဘရိတ်နင်းရာတွင် အသံလုံးဝမထွက်သော Brembo Ceramic ရှေ့ဘရိတ်ရှူး အစုံ။'
+      },
+      {
+        id: 'AP-104',
+        name: 'KYB Excel-G Front Shock Absorber (ရှေ့ရှော့ဘား ၂ လုံးတွဲ)',
+        category: 'Suspension',
+        models: 'Toyota Crown, Mark II, Verossa, Brevis',
+        price: 290000,
+        stock: 'In Stock',
+        badge: 'Japan Original',
+        image: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=700&q=80',
+        desc: 'ဂျပန် KYB အစစ် ရှေ့ရှော့ဘား တစ်စုံ။ လမ်းကြမ်းခံပြီး ကားအောက်ပိုင်း ငြိမ့်ညောင်းတည်ငြိမ်မှုကို အပြည့်အဝပေးနိုင်သည်။'
+      },
+      {
+        id: 'AP-105',
+        name: 'Idemitsu 5W-30 Fully Synthetic Engine Oil (4L)',
+        category: 'Oils',
+        models: 'Universal (ဓာတ်ဆီအင်ဂျင် ကားအားလုံး)',
+        price: 98000,
+        stock: 'In Stock',
+        badge: 'API SP Grade',
+        image: 'https://images.unsplash.com/photo-1635784063388-1ff609e12d7c?auto=format&fit=crop&w=700&q=80',
+        desc: 'ဂျပန်နည်းပညာမြင့် Idemitsu 5W-30 Fully Synthetic အင်ဂျင်ဝိုင် ၄ လီတာဘူး။ အင်ဂျင်သက်တမ်းရှည်ကြာစေသည်။'
+      },
+      {
+        id: 'AP-106',
+        name: 'Philips Ultinon Pro9000 LED Headlight Bulbs (H4/H11)',
+        category: 'Lighting',
+        models: 'Universal, Hilux, Honda Fit, Alphard, Harrier',
+        price: 165000,
+        stock: 'In Stock',
+        badge: '6000K Bright',
+        image: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=700&q=80',
+        desc: 'မူလမီးသီးထက် ၂၅၀% ပိုမိုလင်းအားကောင်းသော Philips LED Headlight မီးသီးတစ်စုံ။ ရေစိုခံပြီး အပူထိန်းစနစ်ပါဝင်သည်။'
+      },
+      {
+        id: 'AP-107',
+        name: 'Toyota Genuine Oil & Air Filter Service Kit',
+        category: 'Engine',
+        models: 'Toyota Alphard, Vellfire, Harrier, Kluger, Crown',
+        price: 62000,
+        stock: 'In Stock',
+        badge: 'Service Combo',
+        image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=700&q=80',
+        desc: 'Toyota OEM အင်ဂျင်ဝိုင်ဖစ်တာ (Oil Filter) နှင့် လေစစ် (Air Filter) ၂ မျိုးတွဲ အစုံ။'
+      },
+      {
+        id: 'AP-108',
+        name: 'Heavy Duty Off-Road LED Work Light Bar (Pair)',
+        category: 'Lighting',
+        models: 'Toyota Hilux, Land Cruiser, Surf, Universal',
+        price: 115000,
+        stock: 'In Stock',
+        badge: 'IP68 Waterproof',
+        image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=700&q=80',
+        desc: 'မြူခိုးနှင့် မိုးတွင်းလမ်းကြမ်းမောင်းနှင်ရာတွင် အထူးလင်းအားကောင်းသော Spotlight ၂ လုံးတွဲ။'
+      },
+      {
+        id: 'AP-109',
+        name: '5D Carbon Fiber Waterproof Car Floor Mats (Full Set)',
+        category: 'Accessories',
+        models: 'Toyota Crown, Mark II, Alphard, Hilux, Honda Fit',
+        price: 145000,
+        stock: 'In Stock',
+        badge: 'Custom Fit',
+        image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=700&q=80',
+        desc: 'ရေစိုခံ၊ ဖုန်နှင့် ရွှံ့အလွယ်တကူ ဆေးကြောသန့်စင်နိုင်သော 5D ခြေနင်းခုံ အပြည့်အစုံ။'
+      },
+      {
+        id: 'AP-110',
+        name: '555 Japan Lower Ball Joint & Stabilizer Link Set',
+        category: 'Suspension',
+        models: 'Toyota Crown, Mark II, Alphard, Hilux',
+        price: 135000,
+        stock: 'In Stock',
+        badge: 'Made in Japan',
+        image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=700&q=80',
+        desc: 'အောက်ပိုင်းအသံထွက်ခြင်းကို ပျောက်ကင်းစေသည့် 555 Sankei Japan ဘောဂျွိုင်းနှင့် လင့်တံအစုံ။'
+      },
+      {
+        id: 'AP-111',
+        name: 'Toyota Genuine CVT Fluid TC / FE (4 Liters)',
+        category: 'Oils',
+        models: 'Honda Fit, Toyota Belta, Vitz, Alphard, Wish',
+        price: 128000,
+        stock: 'In Stock',
+        badge: 'Gearbox Care',
+        image: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=700&q=80',
+        desc: 'ဂီယာဘောက်စ် ချောမွေ့စေပြီး တုန်ခါမှုကင်းဝေးစေသည့် ဂျပန်သံဘူး CVT ဂီယာဝိုင်အစစ်။'
+      },
+      {
+        id: 'AP-112',
+        name: '70mai Smart Tire Inflator Portable Air Compressor',
+        category: 'Accessories',
+        models: 'Universal (ကားမျိုးစုံနှင့် ဆိုင်ကယ်သုံး)',
+        price: 89000,
+        stock: 'In Stock',
+        badge: 'Emergency Essential',
+        image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=700&q=80',
+        desc: 'ကားမီးပလပ် (12V) ထိုးပြီး တာယာလေပေါင်ချိန် အလိုအလျောက် ချိန်ညှိထိုးပေးနိုင်သော ဒစ်ဂျစ်တယ် လေထိုးစက်။'
+      }
+    ];
+
+    /********************************************************************
+     * 2. STATE MANAGEMENT
+     ********************************************************************/
+    const state = {
+      selectedCategory: 'All',
+      selectedCarModel: 'All',
+      searchQuery: '',
+      sortBy: 'popular',
+      cart: JSON.parse(localStorage.getItem('TG_AP_CART') || '[]'),
+      // Telegram Admin Configuration
+      adminUsername: localStorage.getItem('TG_ADMIN_USERNAME') || 'AutoPartsMM_Admin',
+      botToken: localStorage.getItem('TG_BOT_TOKEN') || '',
+      chatId: localStorage.getItem('TG_CHAT_ID') || '',
+      telegramUser: null
+    };
+
+    /********************************************************************
+     * 3. INITIALIZATION & TELEGRAM WEBAPP AUTO-DETECTION
+     ********************************************************************/
+    function initApp() {
+      initTelegramWebApp();
+      updateTopTelegramStatus();
+      renderCategories();
+      renderCarModelPills();
+      renderProducts();
+      renderCartUI();
+      restoreBuyerDraft();
+    }
+
+    function initTelegramWebApp() {
+      try {
+        if (window.Telegram && window.Telegram.WebApp) {
+          const tg = window.Telegram.WebApp;
+          tg.ready();
+          tg.expand();
+
+          const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
+          if (user) {
+            state.telegramUser = user;
+            const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
+            const nameInput = document.getElementById('buyerName');
+            if (nameInput && !nameInput.value && fullName) {
+              nameInput.value = user.username ? `${fullName} (@${user.username})` : fullName;
+            }
+            document.getElementById('tgUserDetectedTag').classList.remove('hidden');
+          }
+        }
+      } catch (e) {
+        console.warn('Telegram WebApp SDK not running inside Telegram client:', e);
+      }
+    }
+
+    function updateTopTelegramStatus() {
+      const cleanUser = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      document.getElementById('tgAdminDisplay').textContent = `Admin: @${cleanUser}`;
+      const statusText = document.getElementById('tgStatusText');
+      if (state.botToken && state.chatId) {
+        statusText.textContent = `Bot API + @${cleanUser} ချိတ်ဆက်ထားသည်`;
+      } else {
+        statusText.textContent = `Direct Order: @${cleanUser}`;
+      }
+    }
+
+    /********************************************************************
+     * 4. FILTERING, SEARCH & CATALOG RENDERING
+     ********************************************************************/
+    function renderCategories() {
+      const bar = document.getElementById('categoryBar');
+      bar.innerHTML = CATEGORIES.map(cat => {
+        const active = state.selectedCategory === cat.id;
+        return `
+          <button
+            onclick="selectCategory('${cat.id}')"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shrink-0 ${
+              active
+                ? 'bg-rose-600 text-white shadow-sm shadow-rose-600/40'
+                : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
+            }"
+          >
+            <i class="fa-solid ${cat.icon}"></i>
+            <span>${cat.label}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderCarModelPills() {
+      const container = document.getElementById('carModelPills');
+      container.innerHTML = CAR_MODELS.map(model => {
+        const active = state.selectedCarModel === model;
+        const label = model === 'All' ? 'အားလုံး' : model;
+        return `
+          <button
+            onclick="selectCarModel('${model}')"
+            class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+              active
+                ? 'bg-sky-500 text-white shadow-xs'
+                : 'bg-slate-900 text-slate-300 hover:bg-slate-700 border border-slate-700'
+            }"
+          >
+            ${label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectCategory(catId) {
+      state.selectedCategory = catId;
+      renderCategories();
+      renderProducts();
+    }
+
+    function selectCarModel(model) {
+      state.selectedCarModel = model;
+      renderCarModelPills();
+      renderProducts();
+    }
+
+    function handleSearch(q) {
+      state.searchQuery = q.trim();
+      const input = document.getElementById('searchInput');
+      if (input && input.value !== q) input.value = q;
+      document.getElementById('clearSearchBtn').classList.toggle('hidden', !state.searchQuery);
+      renderProducts();
+    }
+
+    function handleSort(val) {
+      state.sortBy = val;
+      renderProducts();
+    }
+
+    function resetAllFilters() {
+      state.selectedCategory = 'All';
+      state.selectedCarModel = 'All';
+      state.searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      renderCategories();
+      renderCarModelPills();
+      renderProducts();
+    }
+
+    function formatMMK(num) {
+      return Number(num || 0).toLocaleString('en-US') + ' Ks';
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      const countBadge = document.getElementById('productCountBadge');
+      const filterText = document.getElementById('activeFilterText');
+
+      let list = PRODUCTS.filter(p => {
+        const matchCat = state.selectedCategory === 'All' || p.category === state.selectedCategory;
+        const matchModel = state.selectedCarModel === 'All' ||
+          p.models.toLowerCase().includes(state.selectedCarModel.toLowerCase());
+        const q = state.searchQuery.toLowerCase();
+        const matchSearch = !q ||
+          p.name.toLowerCase().includes(q) ||
+          p.id.toLowerCase().includes(q) ||
+          p.models.toLowerCase().includes(q) ||
+          p.desc.toLowerCase().includes(q);
+        return matchCat && matchModel && matchSearch;
+      });
+
+      if (state.sortBy === 'price-asc') {
+        list.sort((a, b) => a.price - b.price);
+      } else if (state.sortBy === 'price-desc') {
+        list.sort((a, b) => b.price - a.price);
+      }
+
+      countBadge.textContent = `${list.length} မျိုး`;
+
+      const activeFilters = [];
+      if (state.selectedCategory !== 'All') activeFilters.push(state.selectedCategory);
+      if (state.selectedCarModel !== 'All') activeFilters.push(state.selectedCarModel);
+      if (state.searchQuery) activeFilters.push(`"${state.searchQuery}"`);
+      filterText.textContent = activeFilters.length ? `• စစ်ထုတ်မှု: ${activeFilters.join(' / ')}` : '';
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-10 text-center space-y-3">
+            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <p class="font-bold text-slate-800 text-sm">ရှာဖွေထားသော ကားပစ္စည်း မတွေ့ရှိပါ</p>
+            <button onclick="resetAllFilters()" class="px-4 py-2 rounded-xl bg-rose-600 text-white text-xs font-bold">
+              ပစ္စည်းအားလုံး ပြန်ကြည့်မည်
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = list.map(p => {
+        const inCart = state.cart.find(item => item.id === p.id);
+        const qty = inCart ? inCart.qty : 0;
+        const fallbackImg = `https://placehold.co/600x400/1e293b/ffffff?text=${encodeURIComponent(p.name)}`;
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg transition-all flex flex-col overflow-hidden group">
+            <!-- Image Area -->
+            <div class="relative h-36 sm:h-44 bg-slate-100 overflow-hidden cursor-pointer" onclick="openProductDetailModal('${p.id}')">
+              <img
+                src="${p.image}"
+                alt="${escapeHtml(p.name)}"
+                onerror="this.onerror=null; this.src='${fallbackImg}';"
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+              />
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-slate-900/85 text-white text-[10px] font-bold">
+                ${escapeHtml(p.id)}
+              </span>
+              <span class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-rose-600 text-white text-[10px] font-bold shadow-xs">
+                ${escapeHtml(p.badge)}
+              </span>
+            </div>
+
+            <!-- Card Details -->
+            <div class="p-3 sm:p-3.5 flex-1 flex flex-col justify-between space-y-2.5">
+              <div class="space-y-1.5 cursor-pointer" onclick="openProductDetailModal('${p.id}')">
+                <div class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md max-w-full">
+                  <i class="fa-solid fa-car text-rose-600 shrink-0"></i>
+                  <span class="truncate">${escapeHtml(p.models)}</span>
+                </div>
+                <h3 class="font-bold text-slate-900 text-xs sm:text-sm line-clamp-2 leading-snug">
+                  ${escapeHtml(p.name)}
+                </h3>
+              </div>
+
+              <!-- Price + Cart Action -->
+              <div class="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span class="block text-[10px] text-slate-400 leading-none">ဈေးနှုန်း</span>
+                  <span class="text-sm sm:text-base font-extrabold text-rose-600">${formatMMK(p.price)}</span>
+                </div>
+
+                ${
+                  qty === 0
+                    ? `<button
+                        onclick="changeCartQty('${p.id}', 1)"
+                        class="w-full sm:w-auto px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-600 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                      >
+                        <i class="fa-solid fa-plus text-[10px]"></i>
+                        <span>ခြင်းထဲထည့်</span>
+                      </button>`
+                    : `<div class="flex items-center justify-between sm:justify-end gap-2 bg-rose-50 border border-rose-200 rounded-xl px-2 py-1">
+                        <button onclick="changeCartQty('${p.id}', -1)" class="w-6 h-6 rounded-lg bg-white text-rose-700 font-extrabold text-xs shadow-2xs">-</button>
+                        <span class="text-xs font-extrabold text-rose-700 px-1">${qty}</span>
+                        <button onclick="changeCartQty('${p.id}', 1)" class="w-6 h-6 rounded-lg bg-rose-600 text-white font-extrabold text-xs shadow-2xs">+</button>
+                      </div>`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /********************************************************************
+     * 5. PRODUCT DETAIL MODAL
+     ********************************************************************/
+    function openProductDetailModal(productId) {
+      const p = PRODUCTS.find(item => item.id === productId);
+      if (!p) return;
+
+      const inCart = state.cart.find(i => i.id === p.id);
+      const qty = inCart ? inCart.qty : 0;
+      const modal = document.getElementById('productDetailModal');
+      const card = document.getElementById('productDetailCard');
+
+      card.innerHTML = `
+        <div class="relative h-56 bg-slate-900">
+          <img src="${p.image}" alt="${escapeHtml(p.name)}" class="w-full h-full object-cover" />
+          <button onclick="closeProductDetailModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/80 text-white flex items-center justify-center">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-slate-900/85 text-white text-xs font-bold">
+            ကုတ်နံပါတ်: ${escapeHtml(p.id)}
+          </span>
+        </div>
+        <div class="p-5 space-y-3">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 text-xs font-bold">
+            <i class="fa-solid fa-car-side"></i>
+            <span>${escapeHtml(p.models)}</span>
+          </div>
+          <h3 class="font-extrabold text-base sm:text-lg text-slate-900">${escapeHtml(p.name)}</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${escapeHtml(p.desc)}</p>
+
+          <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
+            <div>
+              <span class="text-xs text-slate-400 block">တစ်စုံ/တစ်ခု ဈေးနှုန်း</span>
+              <span class="text-xl font-extrabold text-rose-600">${formatMMK(p.price)}</span>
+            </div>
+            <button
+              onclick="changeCartQty('${p.id}', 1); closeProductDetailModal();"
+              class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md"
+            >
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>ခြင်းတောင်းထဲ ထည့်မည် ${qty > 0 ? `(${qty})` : ''}</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeProductDetailModal() {
+      const modal = document.getElementById('productDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    /********************************************************************
+     * 6. CART MANAGEMENT & CHECKOUT DRAWER
+     ********************************************************************/
+    function changeCartQty(productId, delta) {
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product) return;
+
+      const idx = state.cart.findIndex(item => item.id === productId);
+      if (idx === -1 && delta > 0) {
+        state.cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          qty: 1
+        });
+        showToast(`"${product.name}" ကို ခြင်းထဲထည့်ပြီးပါပြီ`, 'success');
+      } else if (idx !== -1) {
+        state.cart[idx].qty += delta;
+        if (state.cart[idx].qty <= 0) {
+          state.cart.splice(idx, 1);
+        }
+      }
+
+      localStorage.setItem('TG_AP_CART', JSON.stringify(state.cart));
+      renderProducts();
+      renderCartUI();
+      updateLiveTelegramPreview();
+    }
+
+    function clearCart() {
+      state.cart = [];
+      localStorage.setItem('TG_AP_CART', '[]');
+      renderProducts();
+      renderCartUI();
+      closeCheckoutDrawer();
+      showToast('ခြင်းတောင်းကို ရှင်းလင်းလိုက်ပါပြီ', 'info');
+    }
+
+    function renderCartUI() {
+      const totalQty = state.cart.reduce((sum, i) => sum + i.qty, 0);
+      const totalAmount = state.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      document.getElementById('headerCartBadge').textContent = totalQty;
+      document.getElementById('bottomCartQty').textContent = totalQty;
+      document.getElementById('bottomCartTotal').textContent = formatMMK(totalAmount);
+      document.getElementById('drawerItemCount').textContent = totalQty;
+      document.getElementById('drawerTotalAmount').textContent = formatMMK(totalAmount);
+
+      // Show/Hide sticky bottom Telegram bar
+      const bottomBar = document.getElementById('stickyBottomCartBar');
+      if (totalQty > 0) {
+        bottomBar.classList.remove('translate-y-full');
+      } else {
+        bottomBar.classList.add('translate-y-full');
+      }
+
+      // Render items inside drawer
+      const container = document.getElementById('drawerCartItems');
+      if (state.cart.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500">
+            ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။ ဝယ်ယူလိုသော ကားပစ္စည်းများကို အရင်ရွေးချယ်ပါ။
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.cart.map(item => `
+        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-700">${escapeHtml(item.id)}</span>
+              <h4 class="font-bold text-slate-900 text-xs truncate">${escapeHtml(item.name)}</h4>
+            </div>
+            <p class="text-xs font-extrabold text-rose-600 mt-0.5">${formatMMK(item.price)} × ${item.qty} = ${formatMMK(item.price * item.qty)}</p>
+          </div>
+          <div class="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg px-1.5 py-1 shrink-0">
+            <button onclick="changeCartQty('${item.id}', -1)" class="w-6 h-6 rounded hover:bg-slate-100 font-bold text-xs">-</button>
+            <span class="w-5 text-center font-bold text-xs">${item.qty}</span>
+            <button onclick="changeCartQty('${item.id}', 1)" class="w-6 h-6 rounded hover:bg-slate-100 font-bold text-xs">+</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCheckoutDrawer() {
+      if (state.cart.length === 0) {
+        showToast('ကျေးဇူးပြု၍ ဝယ်ယူလိုသော ကားပစ္စည်း အနည်းဆုံး (၁) ခု အရင်ရွေးချယ်ပါ။', 'info');
+        return;
+      }
+      renderCartUI();
+      updateLiveTelegramPreview();
+      document.getElementById('checkoutBackdrop').classList.remove('hidden');
+      document.getElementById('checkoutDrawer').classList.remove('hidden');
+    }
+
+    function closeCheckoutDrawer() {
+      document.getElementById('checkoutBackdrop').classList.add('hidden');
+      document.getElementById('checkoutDrawer').classList.add('hidden');
+    }
+
+    /********************************************************************
+     * 7. TELEGRAM ORDER RECEIPT FORMATTER & DIRECT SENDERS
+     ********************************************************************/
+    function saveBuyerDraft() {
+      const draft = {
+        name: document.getElementById('buyerName').value,
+        phone: document.getElementById('buyerPhone').value,
+        city: document.getElementById('buyerCity').value,
+        payment: document.getElementById('buyerPayment').value,
+        address: document.getElementById('buyerAddress').value,
+        note: document.getElementById('buyerNote').value
+      };
+      localStorage.setItem('TG_BUYER_DRAFT', JSON.stringify(draft));
+    }
+
+    function restoreBuyerDraft() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('TG_BUYER_DRAFT') || 'null');
+        if (!saved) return;
+        if (saved.name && !document.getElementById('buyerName').value) document.getElementById('buyerName').value = saved.name;
+        if (saved.phone) document.getElementById('buyerPhone').value = saved.phone;
+        if (saved.city) document.getElementById('buyerCity').value = saved.city;
+        if (saved.payment) document.getElementById('buyerPayment').value = saved.payment;
+        if (saved.address) document.getElementById('buyerAddress').value = saved.address;
+        if (saved.note) document.getElementById('buyerNote').value = saved.note;
+      } catch (e) {}
+    }
+
+    function buildTelegramOrderMessage(orderId) {
+      const name = document.getElementById('buyerName').value.trim() || '(အမည်မဖြည့်ရသေးပါ)';
+      const phone = document.getElementById('buyerPhone').value.trim() || '(ဖုန်းမဖြည့်ရသေးပါ)';
+      const city = document.getElementById('buyerCity').value;
+      const payment = document.getElementById('buyerPayment').value;
+      const address = document.getElementById('buyerAddress').value.trim() || '(လိပ်စာမဖြည့်ရသေးပါ)';
+      const note = document.getElementById('buyerNote').value.trim();
+
+      const totalAmount = state.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      const totalQty = state.cart.reduce((sum, i) => sum + i.qty, 0);
+
+      const itemLines = state.cart.map((item, idx) =>
+        `${idx + 1}. [${item.id}] ${item.name}\n   ဦးရေ: ${item.qty} ခု × ${formatMMK(item.price)} = ${formatMMK(item.price * item.qty)}`
+      ).join('\n');
+
+      const nowStr = new Date().toLocaleString('en-GB', {
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      let msg = `🛒 AUTOPARTS MM - အော်ဒါအသစ်\n`;
+      msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+      msg += `🆔 အော်ဒါနံပါတ်: #${orderId || 'ORD-PREVIEW'}\n`;
+      msg += `📅 အချိန်: ${nowStr}\n\n`;
+      msg += `👤 ဝယ်ယူသူ အချက်အလက်\n`;
+      msg += `• အမည်: ${name}\n`;
+      msg += `• ဖုန်း: ${phone}\n`;
+      msg += `• ပို့ဆောင်မှု: ${city}\n`;
+      msg += `• လိပ်စာ/ကားဂိတ်: ${address}\n`;
+      msg += `• ငွေပေးချေမှု: ${payment}\n`;
+      if (note) msg += `• မှတ်ချက်/ကားမော်ဒယ်: ${note}\n`;
+      msg += `\n📦 မှာယူထားသော ကားပစ္စည်း (${totalQty} ခု)\n`;
+      msg += `${itemLines || '-'}\n`;
+      msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+      msg += `💰 စုစုပေါင်း ကျသင့်ငွေ: ${formatMMK(totalAmount)}`;
+
+      return msg;
+    }
+
+    function updateLiveTelegramPreview() {
+      saveBuyerDraft();
+      const previewEl = document.getElementById('liveTelegramPreview');
+      if (previewEl) {
+        previewEl.textContent = buildTelegramOrderMessage('ORD-' + String(Date.now()).slice(-5));
+      }
+    }
+
+    function validateCheckoutInputs() {
+      if (state.cart.length === 0) {
+        showToast('ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိပါ။', 'error');
+        return false;
+      }
+      const name = document.getElementById('buyerName').value.trim();
+      const phone = document.getElementById('buyerPhone').value.trim();
+      const address = document.getElementById('buyerAddress').value.trim();
+
+      if (!name || !phone || !address) {
+        showToast('ကျေးဇူးပြု၍ ဝယ်ယူသူအမည်၊ ဖုန်းနံပါတ် နှင့် ပို့ဆောင်ရမည့်လိပ်စာ ပြည့်စုံစွာ ဖြည့်ပေးပါ။', 'error');
+        return false;
+      }
+      return true;
+    }
+
+    // METHOD 1: Open Admin's Telegram Chat directly with pre-filled order message
+    function sendOrderViaTelegramChat() {
+      if (!validateCheckoutInputs()) return;
+
+      const orderId = 'ORD-' + String(Date.now()).slice(-6);
+      const orderText = buildTelegramOrderMessage(orderId);
+      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      const tgDeepLink = `https://t.me/${encodeURIComponent(cleanAdmin)}?text=${encodeURIComponent(orderText)}`;
+
+      // Also silently send via Bot API if owner configured a Bot Token
+      if (state.botToken && state.chatId) {
+        triggerBotMessageSilent(orderText);
+      }
+
+      // Open Telegram link inside Telegram WebApp or new browser tab
+      if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openTelegramLink === 'function') {
+        window.Telegram.WebApp.openTelegramLink(tgDeepLink);
+      } else {
+        window.open(tgDeepLink, '_blank', 'noopener,noreferrer');
+      }
+
+      showOrderReceiptModal(
+        orderText,
+        tgDeepLink,
+        `Admin (@${cleanAdmin}) ၏ Telegram Chat သို့ အော်ဒါစာသား ပို့ဆောင်ရန် ဖွင့်ပေးထားပါသည်။`
+      );
+
+      state.cart = [];
+      localStorage.setItem('TG_AP_CART', '[]');
+      renderProducts();
+      renderCartUI();
+      closeCheckoutDrawer();
+    }
+
+    // METHOD 2: Send directly via Telegram Bot API (or fallback to Receipt Modal + Deep Link)
+    async function sendOrderViaBotApi() {
+      if (!validateCheckoutInputs()) return;
+
+      const orderId = 'ORD-' + String(Date.now()).slice(-6);
+      const orderText = buildTelegramOrderMessage(orderId);
+      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      const tgDeepLink = `https://t.me/${encodeURIComponent(cleanAdmin)}?text=${encodeURIComponent(orderText)}`;
+
+      const btn = document.getElementById('sendBotApiBtn');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Admin Telegram ဆီသို့ ပို့နေပါသည်...</span>`;
+
+      try {
+        if (state.botToken && state.chatId) {
+          const url = `https://api.telegram.org/bot${state.botToken.trim()}/sendMessage`;
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: state.chatId.trim(),
+              text: orderText
+            })
+          });
+          const data = await res.json();
+          if (!data.ok) {
+            throw new Error(data.description || 'Telegram Bot API error');
+          }
+
+          showOrderReceiptModal(
+            orderText,
+            tgDeepLink,
+            'Telegram Bot မှတစ်ဆင့် Admin အကောင့်ဆီသို့ အော်ဒါစာရင်း တိုက်ရိုက်ရောက်ရှိသွားပါပြီ!'
+          );
+        } else {
+          // If running inside Telegram Mini App, sendData to bot if available
+          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+            try {
+              window.Telegram.WebApp.sendData(JSON.stringify({ orderId, orderText }));
+            } catch (err) {}
+          }
+          showOrderReceiptModal(
+            orderText,
+            tgDeepLink,
+            `အော်ဒါဘောက်ချာ အသင့်ဖြစ်ပါပြီ! အောက်ပါခလုတ်ကိုနှိပ်၍ Admin (@${cleanAdmin}) ဆီသို့ တိုက်ရိုက်ပေးပို့နိုင်ပါသည်။`
+          );
+        }
+
+        state.cart = [];
+        localStorage.setItem('TG_AP_CART', '[]');
+        renderProducts();
+        renderCartUI();
+        closeCheckoutDrawer();
+      } catch (err) {
+        showToast('Bot API ပို့ဆောင်မှု အဆင်မပြေပါ - ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-bolt text-amber-400"></i> <span>Website မှ တိုက်ရိုက် အော်ဒါတန်းပို့မည် (Bot API / Instant)</span>`;
+      }
+    }
+
+    async function triggerBotMessageSilent(text) {
+      try {
+        const url = `https://api.telegram.org/bot${state.botToken.trim()}/sendMessage`;
+        await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: state.chatId.trim(), text })
+        });
+      } catch (e) {}
+    }
+
+    function showOrderReceiptModal(orderText, tgDeepLink, subtitle) {
+      document.getElementById('receiptModalSubtitle').textContent = subtitle;
+      document.getElementById('receiptModalText').textContent = orderText;
+      document.getElementById('receiptOpenTelegramLink').href = tgDeepLink;
+      const modal = document.getElementById('orderReceiptModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeOrderReceiptModal() {
+      const modal = document.getElementById('orderReceiptModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function contactAdminDirect() {
+      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      const msg = 'မင်္ဂလာပါ AutoParts MM ခင်ဗျာ။ ကားအပိုပစ္စည်းလေး မေးမြန်းချင်လို့ပါ။';
+      const link = `https://t.me/${encodeURIComponent(cleanAdmin)}?text=${encodeURIComponent(msg)}`;
+      window.open(link, '_blank', 'noopener,noreferrer');
+    }
+
+    function copyOrderText() {
+      const text = document.getElementById('liveTelegramPreview').textContent;
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+      showToast('အော်ဒါစာသားကို Copy ကူးပြီးပါပြီ။', 'success');
+    }
+
+    /********************************************************************
+     * 8. TELEGRAM ADMIN SETTINGS MODAL
+     ********************************************************************/
+    function openTgConfigModal() {
+      document.getElementById('cfgAdminUsername').value = state.adminUsername.replace(/^@/, '');
+      document.getElementById('cfgBotToken').value = state.botToken;
+      document.getElementById('cfgChatId').value = state.chatId;
+      const modal = document.getElementById('tgConfigModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeTgConfigModal() {
+      const modal = document.getElementById('tgConfigModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function saveTgConfig() {
+      const username = document.getElementById('cfgAdminUsername').value.replace(/^@/, '').trim() || 'KAutoPartsMM_Admin';
+      const token = document.getElementById('cfgBotToken').value.trim();
+      const chatId = document.getElementById('cfgChatId').value.trim();
+
+      state.adminUsername = username;
+      state.botToken = token;
+      state.chatId = chatId;
+
+      localStorage.setItem('TG_ADMIN_USERNAME', username);
+      localStorage.setItem('TG_BOT_TOKEN', token);
+      localStorage.setItem('TG_CHAT_ID', chatId);
+
+      updateTopTelegramStatus();
+      closeTgConfigModal();
+      showToast(`Telegram Admin (@${username}) ချိတ်ဆက်မှုကို သိမ်းဆည်းပြီးပါပြီ။`, 'success');
+    }
+
+    /********************************************************************
+     * 9. TOAST & ESCAPE HELPERS
+     ********************************************************************/
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const styles = {
+        success: 'bg-slate-900 border-emerald-500 text-white',
+        error: 'bg-rose-950 border-rose-500 text-white',
+        info: 'bg-slate-900 border-sky-400 text-white'
+      };
+      const icons = {
+        success: 'fa-circle-check text-emerald-400',
+        error: 'fa-circle-exclamation text-rose-400',
+        info: 'fa-brands fa-telegram text-sky-400'
+      };
+
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl shadow-xl border-l-4 ${styles[type] || styles.info} text-xs font-semibold`;
+      toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 250);
+      }, 2800);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    window.onload = initApp;
+  </script>
+</body>
+</html>
