@@ -96,7 +96,7 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">AUTOPARTS</span>
+              <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">KAuto Parts</span>
               <span class="bg-sky-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded flex items-center gap-1">
                 <i class="fa-brands fa-telegram"></i> SHOP
               </span>
@@ -447,7 +447,7 @@
               <input
                 id="cfgAdminUsername"
                 type="text"
-                placeholder="AutoPartsMM_Admin"
+                placeholder="pyaephyo_monkey"
                 class="w-full px-3 py-2 rounded-r-xl border border-slate-300 text-xs sm:text-sm font-mono focus:outline-none focus:border-sky-600"
               />
             </div>
@@ -468,7 +468,7 @@
             <input
               id="cfgBotToken"
               type="text"
-              placeholder="1234567890:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw"
+              placeholder="9137561204:AAGDu_Ejlv6HLaRGUe-TLfj6NBtGK4RR5jk"
               class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:outline-none focus:border-sky-600"
             />
           </div>
@@ -477,7 +477,7 @@
             <input
               id="cfgChatId"
               type="text"
-              placeholder="ဥပမာ - 987654321 သို့မဟုတ် -100123456789"
+              placeholder="5800034024"
               class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:outline-none focus:border-sky-600"
             />
           </div>
@@ -704,7 +704,7 @@
       sortBy: 'popular',
       cart: JSON.parse(localStorage.getItem('TG_AP_CART') || '[]'),
       // Telegram Admin Configuration
-      adminUsername: localStorage.getItem('TG_ADMIN_USERNAME') || 'AutoPartsMM_Admin',
+      adminUsername: localStorage.getItem('TG_ADMIN_USERNAME') || 'pyaephyo_monkey',
       botToken: localStorage.getItem('TG_BOT_TOKEN') || '',
       chatId: localStorage.getItem('TG_CHAT_ID') || '',
       telegramUser: null
@@ -747,7 +747,7 @@
     }
 
     function updateTopTelegramStatus() {
-      const cleanUser = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      const cleanUser = state.adminUsername.replace(/^@/, '').trim() || 'pyaephyo_monkey';
       document.getElementById('tgAdminDisplay').textContent = `Admin: @${cleanUser}`;
       const statusText = document.getElementById('tgStatusText');
       if (state.botToken && state.chatId) {
@@ -1204,7 +1204,7 @@
 
       const orderId = 'ORD-' + String(Date.now()).slice(-6);
       const orderText = buildTelegramOrderMessage(orderId);
-      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'pyaephyo_monkey';
       const tgDeepLink = `https://t.me/${encodeURIComponent(cleanAdmin)}?text=${encodeURIComponent(orderText)}`;
 
       // Also silently send via Bot API if owner configured a Bot Token
@@ -1238,7 +1238,7 @@
 
       const orderId = 'ORD-' + String(Date.now()).slice(-6);
       const orderText = buildTelegramOrderMessage(orderId);
-      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'pyaephyo_monkey';
       const tgDeepLink = `https://t.me/${encodeURIComponent(cleanAdmin)}?text=${encodeURIComponent(orderText)}`;
 
       const btn = document.getElementById('sendBotApiBtn');
@@ -1320,7 +1320,7 @@
     }
 
     function contactAdminDirect() {
-      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'AutoPartsMM_Admin';
+      const cleanAdmin = state.adminUsername.replace(/^@/, '').trim() || 'pyaephyo_monkey';
       const msg = 'မင်္ဂလာပါ AutoParts MM ခင်ဗျာ။ ကားအပိုပစ္စည်းလေး မေးမြန်းချင်လို့ပါ။';
       const link = `https://t.me/${encodeURIComponent(cleanAdmin)}?text=${encodeURIComponent(msg)}`;
       window.open(link, '_blank', 'noopener,noreferrer');
@@ -1356,7 +1356,7 @@
     }
 
     function saveTgConfig() {
-      const username = document.getElementById('cfgAdminUsername').value.replace(/^@/, '').trim() || 'KAutoPartsMM_Admin';
+      const username = document.getElementById('cfgAdminUsername').value.replace(/^@/, '').trim() || 'Kpyaephyo_monkey';
       const token = document.getElementById('cfgBotToken').value.trim();
       const chatId = document.getElementById('cfgChatId').value.trim();
 
